@@ -1,0 +1,14 @@
+{
+	"passcode": {
+		"interval": 30, 
+		"output": [
+			{
+				"irc" : {
+					"server": "",
+					"port": "",
+					"username": "ingress_tracker"
+				}
+			}
+		]
+	}
+}

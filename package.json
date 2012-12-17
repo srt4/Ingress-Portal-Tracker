@@ -1,0 +1,12 @@
+{
+	"name": "ingress-tracker",
+	"version": "0.0.1",
+	"author": "Ollie Parsley <ollie@ollieparsley.com>",
+	"dependencies": {
+		"ansi-color": "*"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ollieparsley/ingress-tracker.git"
+	}
+}

@@ -14,3 +14,5 @@ results
 npm-debug.log
 /nbproject/private/
 /nbproject/
+/config.json
+/node_modules/
