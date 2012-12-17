@@ -3,7 +3,8 @@
 	"version": "0.0.1",
 	"author": "Ollie Parsley <ollie@ollieparsley.com>",
 	"dependencies": {
-		"ansi-color": "*"
+		"ansi-color": "*",
+		"irc": "*"
 	},
 	"repository": {
 		"type": "git",
