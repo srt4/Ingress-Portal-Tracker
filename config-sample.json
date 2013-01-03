@@ -14,5 +14,11 @@
 				]
 			}
 		]
-	}
+	},
+    "api": {
+        "csrf": "iiDmWnb3JI5aAOQsjEJfJ3Cycn3jRjRT"
+    },
+    "server": {
+        "refreshInterval": 3600
+    }
 }

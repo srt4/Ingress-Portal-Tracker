@@ -1,78 +1,15 @@
 var Portal = require("./lib/portal");
-var Passcode = require("./lib/passcode");
-var color = require("ansi-color").set;
 var config = require("./config.json");
 var irc = require('irc');
+var httpServer = require('http');
 
-var collectedPasscodes = {};
-var passcodeOutput = [];
 
-config.passcode.output.forEach(function(output){
-	if (output.type === "irc") {
-		var client = new irc.Client(
-			output.host,
-			output.user,
-			{
-				channels: output.channels,
-				port: output.port,
-				selfSigned: true,
-				secure: output.ssl,
-				password: output.password,
-				certExpired: true
-			}
-		);
-			
-		client.addListener('error', function(message) {
-			console.error('ERROR: %s: %s', message.command, message.args.join(' '));
-		});
-		
-		client.addListener('message', function (from, to, message) {
-			if (message === "passcode search now") {
-				getPasscodes();
-			}
-			output.channels.forEach(function(channel) {
-				client.say(channel, "Fetching any passcodes " + from);
-			});
-		});
-			
-		setTimeout(function(){
-			output.channels.forEach(function(channel) {
-				client.say(channel, "I'm alive!");
-			});
-		}, 20 * 1000);
-		
-		passcodeOutput.push({
-			type: "irc",
-			connection: client
-		});
-
-	}	
-	
-});
-
-function getPasscodes() {
-	Passcode.fetchAll(function(passcodes){
-		passcodes.forEach(function(passcode){
-			console.log("Passcode: " + passcode);
-			if (collectedPasscodes[passcode] === undefined) {
-				console.log(new Date().getUTCDate() + " - NEW CODE!!!!! " + passcode);
-				passcodeOutput.forEach(function(output){
-					if (output.type === "irc") {
-						output.channels.forEach(function(channel) {
-							client.say(channel, "#PASSCODE: " + passcode);
-						});
-					}
-				});
-			} else {
-				collectedPasscodes[passcode] = true;
-			}
-		});
-	});
-}
+var foundPortals = {};
 
 function getPortals() {
 	Portal.fetchAll(null, null, function(portals){
 		portals.forEach(function(portal){
+            foundPortals[portal.getId()] = portal;
 			console.log("ID: " + portal.getId());
 			console.log("NAME: " + portal.getName());
 			console.log("ADDRESS: " + portal.getAddress());
@@ -86,7 +23,7 @@ function getPortals() {
 					teamColor = "blue_bg";
 					break;
 			}
-			console.log("TEAM: " + color(portal.getTeam(), teamColor));
+			console.log("TEAM: " + portal.getTeam());
 			console.log("MODS: ");
 			portal.getMods().forEach(function(mod){
 				console.log(" - Name: " + mod.getName() + ", Rarity: " + mod.getRarity());
@@ -99,12 +36,22 @@ function getPortals() {
 		});
 	});
 }
-setInterval(function(){
-	getPasscodes();
-}, (config.passcode.interval === undefined ? 30 : config.passcode.interval) * 1000);
+
+
+httpServer.createServer(function(request,response){
+    response.writeHeader(200, {"Content-Type": "text/plain"});
+
+    for (var portalId in foundPortals) {
+        var portal = foundPortals[portalId];
+        response.write(JSON.stringify(portal));
+    }
+
+    response.end();
+}).listen(8080);
 
 
 setInterval(function(){
 	getPortals();
-}, 5 * 60 * 1000);
+}, config.server.refreshInterval);
+
 getPortals();
