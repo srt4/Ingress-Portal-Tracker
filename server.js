@@ -11,11 +11,14 @@ function getPortals() {
 		portals.forEach(function(portal){
             foundPortals[portal.getId()] = portal;
 
-			console.log("ID: " + portal.getId());
-			console.log("NAME: " + portal.getName());
-			console.log("ADDRESS: " + portal.getAddress());
-			
+            if(config.debug) {
+                console.log("ID: " + portal.getId());
+                console.log("NAME: " + portal.getName());
+                console.log("ADDRESS: " + portal.getAddress());
+            }
+
 			var teamColor = "white_bg";
+
 			switch(portal.getTeam()) {
 				case "enlightened":
 					teamColor = "green_bg";
@@ -25,19 +28,21 @@ function getPortals() {
 					break;
 			}
 
-			console.log("TEAM: " + portal.getTeam());
+			if (config.debug) {
+                console.log("TEAM: " + portal.getTeam());
+                console.log("MODS: ");
 
-			console.log("MODS: ");
-			portal.getMods().forEach(function(mod){
-				console.log(" - Name: " + mod.getName() + ", Rarity: " + mod.getRarity());
-			});
+                portal.getMods().forEach(function(mod){
+                    console.log(" - Name: " + mod.getName() + ", Rarity: " + mod.getRarity());
+                });
 
-			console.log("RESONATORS: ");
-			portal.getResonators().forEach(function(resonator){
-				console.log(" - Level: " + resonator.getLevel() + ", Energy: " + resonator.getEnergyTotal() + " (" + resonator.getEnergyPercentage() + "%)");
-			});
+                console.log("RESONATORS: ");
+                portal.getResonators().forEach(function(resonator){
+                    console.log(" - Level: " + resonator.getLevel() + ", Energy: " + resonator.getEnergyTotal() + " (" + resonator.getEnergyPercentage() + "%)");
+                });
 
-			console.log("\n-----------------------------------------------------------------------------------\n");
+                console.log("\n-----------------------------------------------------------------------------------\n");
+            }
 		});
 	});
 }

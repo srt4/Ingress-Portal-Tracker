@@ -1,22 +1,12 @@
+/**
+    To get the CSRF, look inside the cookie passed from your browser to ingress.com/intel
+*/
 {
-	"passcode": {
-		"interval": 30, 
-		"output": [
-			{
-				"type": "irc",
-				"server": "irc.server.com",
-				"port": 123456,
-				"user": "ingress_tracker",
-				"password": "123456",
-				"ssl": true,
-				"channels": [
-					"#wooo"
-				]
-			}
-		]
-	},
     "api": {
-        "csrf": "iiDmWnb3JI5aAOQsjEJfJ3Cycn3jRjRT"
+        "csrf": "",
+        "centerLatE6": 47017201,
+        "centerLonE6": -122343750,
+        "radiusE6":    1000000
     },
     "server": {
         "refreshInterval": 3600
