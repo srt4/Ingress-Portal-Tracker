@@ -7,6 +7,10 @@ var httpServer = require('http');
 var foundPortals = {};
 
 function getPortals() {
+    if(config.debug) {
+        console.log("Fetching portals...");
+    }
+
 	Portal.fetchAll(null, null, function(portals){
 		portals.forEach(function(portal){
             foundPortals[portal.getId()] = portal;
@@ -17,8 +21,7 @@ function getPortals() {
                 console.log("ADDRESS: " + portal.getAddress());
             }
 
-			var teamColor = "white_bg";
-
+			var teamColor;
 			switch(portal.getTeam()) {
 				case "enlightened":
 					teamColor = "green_bg";
@@ -26,9 +29,12 @@ function getPortals() {
 				case "resistance":
 					teamColor = "blue_bg";
 					break;
+                default:
+                    teamColor = "white_bg";
+                    break;
 			}
 
-			if (config.debug) {
+			if (config.debug ) {
                 console.log("TEAM: " + portal.getTeam());
                 console.log("MODS: ");
 
@@ -43,6 +49,8 @@ function getPortals() {
 
                 console.log("\n-----------------------------------------------------------------------------------\n");
             }
+
+            console.log("Tried to fetch portals");
 		});
 	});
 }
