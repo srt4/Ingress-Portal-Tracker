@@ -1,9 +1,25 @@
-var Portal = require("./lib/portal");
-var Mongo = require('./lib/mongo');
-var config = require("./config.json");
-var irc = require('irc');
-var httpServer = require('http');
+var Portal = require("./lib/portal"),
+    Mongo = require('./lib/mongo'),
+    config = require("./config.json"),
+    express = require('express'),
+    portals = require('routes/portals');
 
+var app = express();
+
+app.configure(function () {
+    app.use(express.logger('dev'));
+    app.use(express.bodyParser());
+});
+
+// add routes
+app.get('/wines', wine.findAll);
+app.get('/wines/:id', wine.findById);
+app.post('/wines', wine.addWine);
+app.put('/wines/:id', wine.updateWine);
+app.delete('/wines/:id', wine.deleteWine);
+
+app.listen(3000);
+console.log('Listening on port 3000...');
 
 var foundPortals = {};
 
@@ -57,21 +73,6 @@ function getPortals() {
     });
 
 }
-
-
-httpServer.createServer(function(request,response){
-	response.writeHeader(200, {"Content-Type": "text/plain"});
-
-	for (var portalId in foundPortals) {
-        // so as to not look up internal properties
-		if(foundPortals.hasOwnProperty(portalId)) {
-            var portal = foundPortals[portalId];
-            response.write(JSON.stringify(portal));
-        }
-	}
-
-	response.end();
-}).listen(8080);
 
 
 setInterval(function(){
