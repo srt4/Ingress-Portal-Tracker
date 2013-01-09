@@ -79,8 +79,8 @@ var appendPortal = function(portal, map, icons) {
 var allPortalsLoaded = function(portals, map) {
     console.log("Well, all portalps are loaded");
     portals.forEach(function(portal) {
-        var lat = portal.latitude / 10;
-        var lon = portal.longitude / 10;
+        var lat = portal.latitude;
+        var lon = portal.longitude;
         L.marker(new L.LatLng(lat, lon), {
         }).addTo(map);
     });

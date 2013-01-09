@@ -6,7 +6,7 @@ var addHandlersToFilters = function() {
         $searchFilters = $filterContainer.find("#search-filters"),
         $levelFilterForm = $levelFilters.find("#level-filter"),
         $factionFilterForm = $factionFilters.find("#faction-filter"),
-        $searchFilterForm =
+        $searchFilterForm;
 
 };
 
