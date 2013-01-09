@@ -55,6 +55,7 @@ function getPortals() {
 					teamColor = "white_bg";
 					break;
 			}
+            console.log(portal.latitude);
 
 			if (config.debug && false) {
 				console.log("TEAM: " + portal.getTeam());
@@ -82,6 +83,6 @@ setInterval(function(){
 	//getPortals();
 }, config.server.refreshInterval);
 
-//getPortals();
+getPortals();
 
 Mongo.getAllPortals();
