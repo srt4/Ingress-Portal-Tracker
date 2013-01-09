@@ -2,8 +2,9 @@ var Portal = require("./lib/portal"),
     Mongo = require('./lib/mongo'),
     config = require("./config.json"),
     express = require('express'),
-    Player = require('./lib/player')
-    portals = require('./routes/portals')
+    Player = require('./lib/player'),
+    portals = require('./routes/portals'),
+    players = require('./routes/players'),
     path = require('path');
 
 var app = express();
@@ -20,6 +21,7 @@ app.get('/portals/user/:id', portals.findByUser);
 app.get('/portals/faction/:id', portals.findByFaction);
 app.get('/portals/lvlgt/:id', portals.findByLevelGt);
 app.get('/portals/lvllt/:id', portals.findByLevelLt);
+app.get('/players', players.findAll);
 
 
 app.listen(3000);
@@ -84,6 +86,7 @@ setInterval(function(){
 	//getPortals();
 }, config.server.refreshInterval);
 
+/*
 Player.fetchAll([
  "0664e05899e9472480e1540e27601134.c",
  "da967df8c5d24bd3bf681174a5d48938.c",
@@ -266,9 +269,9 @@ function(data) {
    data.forEach(function(player) {
        Mongo.savePlayer(player);
    })
-});
+});*/
 
-getPortals();
+//getPortals();
 
 //Mongo.getAllPortals();
 

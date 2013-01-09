@@ -1,5 +1,10 @@
+var userStore; // don't want to make this global... todo
+
 $(document).ready(function() {
     var map = initializeMap();
+
+    userStore = new UserStore();
+    userStore.fetchAllusers();
 
     fetchPortals(map);
 
@@ -39,6 +44,8 @@ var fetchPortals = function(map) {
 };
 
 var appendPortal = function(portal, map, icons) {
+    portal.userMap = userStore.users;
+
     var $portalDiv = $("<div/>").html(
         new EJS({
             url:"/js/ejs/tpl/portalSidebar.ejs"

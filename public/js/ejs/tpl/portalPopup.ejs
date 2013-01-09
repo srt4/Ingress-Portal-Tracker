@@ -1,5 +1,6 @@
 <div class="portal-<%= team %>">
     <h1><%= name %></h1>
+    <h2><%= userMap[capturingPlayerId] %></h2>
     <div>Resonators</div>
     <ul>
         <% for (var i = 0; i < resonators.length; i++) { %>
@@ -17,6 +18,8 @@
             </div>
 
             <%= resonator.distanceToPortal %>m
+            <br/>
+            <%= userMap[resonator.ownerGuid] %>
         </li>
         <% } %>
     </ul>
