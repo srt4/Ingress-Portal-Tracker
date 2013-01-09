@@ -4,8 +4,12 @@ $(document).ready(function() {
     fetchPortals(map);
 
     window.onload = function(){
-        initializePanelHeights(map)
+        initializeOrUpdatePanelHeights(map)
     };
+
+    $(document).on("resize", function() {
+        initializeOrUpdatePanelHeights(map);
+    });
 });
 
 var fetchPortals = function(map) {
@@ -65,7 +69,7 @@ var initializeMap = function() {
     return map;
 };
 
-var initializePanelHeights = function(/*L.Map to invalidate */map) {
+var initializeOrUpdatePanelHeights = function(/*L.Map to invalidate */map) {
     $("#portals").height($(window).height());
     $("#map").height($(window).height());
 
