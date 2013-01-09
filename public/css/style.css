@@ -43,11 +43,13 @@ body {
 }
 
 #portals > div {
+    padding: 0;
+    margin: 5px;
     border-bottom: thin solid #222;
 }
 
 #portals > div:hover {
-    background: #ccc;
+    background: #eee;
 }
 
 #filters {
