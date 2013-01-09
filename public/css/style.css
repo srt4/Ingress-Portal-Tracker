@@ -1,3 +1,35 @@
-#portals div {
-
+body {
+    padding: 0;
+    margin: 0;
+    max-height: 100%;
+    font-family: Droid Sans, sans-serif;
 }
+
+#portals {
+
+    height: 900px;
+    max-height: 100%;
+    width: 25%;
+    float: left;
+    overflow: scroll;
+}
+
+#map {
+    height: 100%;
+    max-height: 100%;
+    width: 75%;
+    float: left;
+}
+
+#portals h1 {
+    font-size: 16px;
+}
+
+#portals h2 {
+    font-size: 14px;
+}
+
+#portals {
+    font-size: 12px;
+}
+
