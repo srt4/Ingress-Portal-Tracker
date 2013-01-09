@@ -6,7 +6,6 @@ body {
 }
 
 #portals {
-
     height: 900px;
     max-height: 100%;
     width: 25%;
@@ -33,3 +32,10 @@ body {
     font-size: 12px;
 }
 
+.portal-enlightened:hover {
+    background: #bbffbb;
+}
+
+.portal-resistance:hover {
+    background: #5890AD;
+}

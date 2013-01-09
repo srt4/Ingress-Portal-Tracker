@@ -1,0 +1,21 @@
+<div class="portal-<%= team %>">
+    <h1><%= name %></h1>
+    <div>Resonators</div>
+    <ul>
+        <% for (var i = 0; i < resonators.length; i++) { %>
+        <li>
+            <% resonator = resonators[i] %>
+            Level <%= resonator.level %>
+
+            <%
+                var portalHealth = (resonator.energyTotal / resonator.levels[resonator.level]) * 100;
+            %>
+
+            <div style="display:inline-block; width:150px; height: 1em">
+                <div style="background:green; height:1em; float:left; width: <%= portalHealth %>%"></div>
+                <div style="background:red;height:1em;  float:left; width:<%= 100-portalHealth %>%"></div>
+            </div>
+        </li>
+        <% } %>
+    </ul>
+</div>

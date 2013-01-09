@@ -15,34 +15,75 @@ $(document).ready(function() {
 var fetchPortals = function(map) {
     var portals = []; // todo store this elsewhere
 
+    var icons = {
+        enlightened:L.icon({
+            iconUrl:"/img/enlightened.png",
+            iconSize: [60, 60],
+            iconAnchor: [30, 30]
+        }),
+        resistance:L.icon({
+            iconUrl:"/img/resistance.png",
+            iconSize: [60, 60],
+            iconAnchor: [30, 30]
+        })
+    };
+
     $.getJSON("/portals/", function(data){
         $(data).each(function (key, value){
             portals.push(value);
-
-            // add basic portal info
-            var $portalDiv = $("<div/>");
-            $portalDiv.append($("<h1/>").text(value.name));
-            $portalDiv.append($("<h2/>").text(value.address));
-
-            // add mods
-            var $modsUl = $("<ul/>");
-            $(value.mods).each(function(key, mod){
-                $modsUl.append($("<li/>").text(mod.rarity));
-            });
-            $portalDiv.append($modsUl);
-
-            // add resonators
-            var $resonatorsUl = $("<div/>");
-            $(value.resonators).each(function(key, resonator){
-                $resonatorsUl.append(resonator.level + ", ");
-            });
-            $portalDiv.append($resonatorsUl);
-
-            // append to left-side list
-            $("#portals").append($portalDiv);
+            appendPortal(value, map, icons);
         });
     }).done(function() {
-        allPortalsLoaded(portals, map);
+        //allPortalsLoaded(portals, map, icons);
+    });
+};
+
+var appendPortal = function(portal, map, icons) {
+    // add basic portal info
+    var $portalDiv = $("<div/>").addClass("portal-" + portal.team);
+    $portalDiv.append($("<h1/>").text(portal.name));
+    $portalDiv.append($("<h2/>").text(portal.address));
+
+    // add mods
+    var $modsUl = $("<ul/>");
+    $(portal.mods).each(function(key, mod){
+        $modsUl.append($("<li/>").text(mod.rarity));
+    });
+    $portalDiv.append($modsUl);
+
+    // add resonators
+    var $resonatorsUl = $("<div/>");
+    $(portal.resonators).each(function(key, resonator){
+        $resonatorsUl.append(resonator.level + ", ");
+    });
+    $portalDiv.append($resonatorsUl);
+
+    // append to left-side list
+    $("#portals").append($portalDiv);
+
+    var lat = portal.latitude / 10;
+    var lon = portal.longitude / 10;
+    var marker = new L.Marker(new L.LatLng(lat, lon), {
+        icon: icons[portal.team]
+    });
+    map.addLayer(marker);
+
+    var popupHtml = new EJS({
+        url: "/js/ejs/tpl/portalPopup.ejs"
+    }).render(portal);
+
+    // add marker
+    marker.bindPopup(
+        popupHtml
+    );
+
+    $portalDiv.click(function() {
+        map.panTo(
+            new L.LatLng(lat, lon)
+        );
+        console.log(            new L.LatLng(lat, lon)
+        );
+        marker.openPopup();
     });
 };
 
@@ -51,7 +92,8 @@ var allPortalsLoaded = function(portals, map) {
     portals.forEach(function(portal) {
         var lat = portal.latitude / 10;
         var lon = portal.longitude / 10;
-        L.marker(new L.LatLng(lat, lon)).addTo(map);
+        L.marker(new L.LatLng(lat, lon), {
+        }).addTo(map);
     });
 };
 
