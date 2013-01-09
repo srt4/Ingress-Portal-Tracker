@@ -46,6 +46,10 @@ body {
     border-bottom: thin solid #222;
 }
 
+#portals > div:hover {
+    background: #ccc;
+}
+
 #filters {
     position: absolute;
     vertical-align: middle;
