@@ -50,8 +50,8 @@ var appendPortal = function(portal, map, icons) {
     // append to left-side list
     $("#portals").append($portalDiv);
 
-    var lat = portal.latitude / 10;
-    var lon = portal.longitude / 10;
+    var lat = portal.latitude;
+    var lon = portal.longitude;
     var marker = new L.Marker(new L.LatLng(lat, lon), {
         icon: icons[portal.team]
     });
@@ -70,7 +70,7 @@ var appendPortal = function(portal, map, icons) {
         map.panTo(
             new L.LatLng(lat, lon)
         );
-        console.log(            new L.LatLng(lat, lon)
+        console.log(new L.LatLng(lat, lon)
         );
         marker.openPopup();
     });
