@@ -15,5 +15,58 @@
     </div>
     <div id="map">
     </div>
+    <div id="filters">
+        <div id="level-filters">
+            <h1>Filter by Level</h1>
+            <form id="level-filter-form">
+                <label>
+                    Minimum
+                    <select id="level-min">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                    </select>
+                </label>
+                <br />
+                <label>
+                    Maximum
+                    <select id="level-max">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                    </select>
+                </label>
+            </form>
+        </div>
+
+        <div id="faction-filters">
+            <h1>Filter by Faction</h1>
+            <form id="faction-filter">
+                <label>
+                    Resistance
+                    <input type="checkbox" value="resistance" />
+                </label>
+                <br />
+                <label>
+                    Enlightened
+                    <input type="checkbox" value="enlightened" />
+                </label>
+            </form>
+        </div>
+
+        <label for="search-filters">
+            <input type="text" id="search-filters" />
+        </label>
+    </div>
 </body>
 </html>

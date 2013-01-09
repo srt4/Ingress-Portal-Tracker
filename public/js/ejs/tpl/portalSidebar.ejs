@@ -1,0 +1,13 @@
+<div class="portal-<%= team %>">
+    <% var level = 8; %>
+    <% for (var i = 0; i < resonators.length; i++) { %>
+        <% resonator = resonators[i] %>
+        <%
+        if (resonator.level < level) {
+            level = resonator.level;
+        }
+        %>
+    <% } %>
+    <h1><%= name %> (<%= level %>)</h1>
+    <h2><%= address %></h2>
+</div>

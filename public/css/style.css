@@ -26,16 +26,34 @@ body {
 
 #portals h2 {
     font-size: 14px;
+    font-weight: normal;
 }
 
 #portals {
     font-size: 12px;
 }
 
-.portal-enlightened:hover {
-    background: #bbffbb;
+#portals .portal-resistance h1 {
+    color: #0000cc;
 }
 
-.portal-resistance:hover {
-    background: #5890AD;
+#portals .portal-enlightened h1 {
+    color: #006600;
+}
+
+#portals > div {
+    border-bottom: thin solid #222;
+}
+
+#filters {
+    position: absolute;
+    vertical-align: middle;
+    right: 0;
+    height: 200px;
+    width: 200px;
+    background: rgba(255,255,255, 0.8);
+}
+
+#filters h1 {
+    font-size: 12px;
 }

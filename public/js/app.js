@@ -39,24 +39,13 @@ var fetchPortals = function(map) {
 };
 
 var appendPortal = function(portal, map, icons) {
-    // add basic portal info
-    var $portalDiv = $("<div/>").addClass("portal-" + portal.team);
-    $portalDiv.append($("<h1/>").text(portal.name));
-    $portalDiv.append($("<h2/>").text(portal.address));
+    var $portalDiv = $("<div/>").html(
+        new EJS({
+            url:"/js/ejs/tpl/portalSidebar.ejs"
+        }).render(portal)
+    );
 
-    // add mods
-    var $modsUl = $("<ul/>");
-    $(portal.mods).each(function(key, mod){
-        $modsUl.append($("<li/>").text(mod.rarity));
-    });
-    $portalDiv.append($modsUl);
-
-    // add resonators
-    var $resonatorsUl = $("<div/>");
-    $(portal.resonators).each(function(key, resonator){
-        $resonatorsUl.append(resonator.level + ", ");
-    });
-    $portalDiv.append($resonatorsUl);
+    console.log($portalDiv);
 
     // append to left-side list
     $("#portals").append($portalDiv);

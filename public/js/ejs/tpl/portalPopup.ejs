@@ -8,7 +8,7 @@
             Level <%= resonator.level %>
 
             <%
-                var portalHealth = (resonator.energyTotal / resonator.levels[resonator.level]) * 100;
+                var portalHealth = (resonator.energyTotal / resonator.levels[resonator.level - 1]) * 100;
             %>
 
             <div style="display:inline-block; width:150px; height: 1em">
