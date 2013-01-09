@@ -1,7 +1,17 @@
 $(document).ready(function() {
+    var map = initializeMap();
+
+    fetchPortals(map);
+
+    window.onload = function(){
+        initializePanelHeights(map)
+    };
+});
+
+var fetchPortals = function(map) {
     var portals = []; // todo store this elsewhere
 
-    $.getJSON("/portals/faction/enlightened", function(data){
+    $.getJSON("/portals/", function(data){
         $(data).each(function (key, value){
             portals.push(value);
 
@@ -27,13 +37,19 @@ $(document).ready(function() {
             // append to left-side list
             $("#portals").append($portalDiv);
         });
+    }).done(function() {
+        allPortalsLoaded(portals, map);
     });
+};
 
-
-    window.onload = function(){initializePanelHeights(initializeMap);};
-
-});
-
+var allPortalsLoaded = function(portals, map) {
+    console.log("Well, all portalps are loaded");
+    portals.forEach(function(portal) {
+        var lat = portal.latitude / 10;
+        var lon = portal.longitude / 10;
+        L.marker(new L.LatLng(lat, lon)).addTo(map);
+    });
+};
 
 var initializeMap = function() {
     var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/4bdf8a2626c048129923f7597f80acce/45831/256/{z}/{x}/{y}.png',
@@ -44,8 +60,19 @@ var initializeMap = function() {
 
     map.addLayer(cloudmade);
 
-    map.setView(new L.LatLng(47.122, -122.2), 17);
+    updateMapLocationWithUserLoc(map);
 
+    return map;
+};
+
+var initializePanelHeights = function(/*L.Map to invalidate */map) {
+    $("#portals").height($(window).height());
+    $("#map").height($(window).height());
+
+    map.invalidateSize();
+};
+
+var updateMapLocationWithUserLoc = function(map) {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(onSuccess, onError);
     } else {
@@ -70,10 +97,4 @@ var initializeMap = function() {
 
         map.setView(new L.LatLng($.loc.lat, $.loc.lon), 17);
     }
-};
-
-var initializePanelHeights = function(callback) {
-    $("#portals").height($(window).height());
-    $("#map").height($(window).height());
-    callback();
 };
