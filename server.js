@@ -17,6 +17,7 @@ app.configure(function () {
 
 // add routes
 app.get('/portals', portals.findAll);
+app.get('/portals/:lat/:lon/:radius', portals.findAllBounded);
 app.get('/portals/user/:id', portals.findByUser);
 app.get('/portals/faction/:id', portals.findByFaction);
 app.get('/portals/lvlgt/:id', portals.findByLevelGt);

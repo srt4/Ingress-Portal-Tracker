@@ -1,8 +1,26 @@
 var userStore; // don't want to make this global... todo
 var filterUtils;
+var markers = [];
+var markerGroup;
 
 $(document).ready(function() {
     var map = initializeMap();
+    markerGroup = new L.LayerGroup();
+    map.addLayer(markerGroup);
+
+    map.on('moveend', function(event) {
+        var radius;
+
+        try {
+            radius = MapUtils.getLatLonRadiusFromMap(map.getBounds());
+        } catch(e) {
+            // do nothing
+        }
+
+        if(radius !== undefined) {
+            fetchPortals(map, radius);
+        }
+    });
 
     userStore = new UserStore();
     userStore.fetchAllusers();
@@ -20,31 +38,44 @@ $(document).ready(function() {
 
 /**
  *
+ * @param {L.LayerGroup} markerGroup
+ */
+var deleteAllMarkers = function(markerGroup) {
+    markerGroup.clearLayers();
+};
+
+/**
+ *
  * @param {L.Map} map
  */
-var fetchPortals = function(map) {
-    var portals = []; // todo store this elsewhere
-
+var fetchPortals = function(map, bounds) {
     var icons = {
-        enlightened:L.icon({
-            iconUrl:"/img/enlightened.png",
+        enlightened: L.icon({
+            iconUrl: "/img/enlightened.png",
             iconSize: [60, 60],
             iconAnchor: [30, 30]
         }),
-        resistance:L.icon({
-            iconUrl:"/img/resistance.png",
+        resistance: L.icon({
+            iconUrl: "/img/resistance.png",
             iconSize: [60, 60],
             iconAnchor: [30, 30]
         })
     };
 
-    $.getJSON("/portals/", function(data){
+    var url = "/portals";
+    if(bounds !== undefined) {
+        deleteAllMarkers(markerGroup);
+        url += "/" + bounds.lat + "/" + bounds.lon + "/" + bounds.radius;
+    }
+
+    $.getJSON(url, function(data){
+        $("#portals").empty();
         $(data).each(function (key, value){
-            portals.push(appendPortal(value, map, icons));
+            markers.push(appendPortal(value, map, icons));
         });
     }).done(function() {
             filterUtils = new MapFilterUtils();
-            filterUtils.setMarkerDivCollection(portals);
+            filterUtils.setMarkerDivCollection(markers);
             filterUtils.setMap(map);
             filterUtils.setSidebarDiv($("#portals"));
             filterUtils.addHandlersToFilters();
@@ -77,7 +108,7 @@ var appendPortal = function(portal, map, icons) {
         icon: icons[portal.team]
     });
 
-    map.addLayer(marker);
+    markerGroup.addLayer(marker);
 
     var popupHtml = new EJS({
         url: "/js/ejs/tpl/portalPopup.ejs"
@@ -114,9 +145,7 @@ var initializeMap = function() {
         cloudmade = new L.TileLayer(cloudmadeUrl, {fadeAnimation: false, zoomAnimation: false, maxZoom: 18, attribution: cloudmadeAttribution});
 
     var map = new L.Map('map');
-
     map.addLayer(cloudmade);
-
     updateMapLocationWithUserLoc(map);
 
     return map;
@@ -161,5 +190,21 @@ var updateMapLocationWithUserLoc = function(map) {
         };
 
         map.setView(new L.LatLng($.loc.lat, $.loc.lon), 17);
+    }
+};
+
+var MapUtils = {
+    getLatLonRadiusFromMap: function(bounds) {
+        var northEast = bounds.getNorthEast();
+        var southWest = bounds.getSouthWest();
+
+        return {
+            lat: (0.5 * (northEast.lat + southWest.lat)),
+            lon: (0.5 * (northEast.lng + southWest.lng)),
+            radius: (Math.max(
+                (0.5 * (northEast.lat - southWest.lat)),
+                (0.5 * (northEast.lng - southWest.lng))
+            ))
+        };
     }
 };
