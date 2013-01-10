@@ -8,6 +8,11 @@ $(document).ready(function() {
     markerGroup = new L.LayerGroup();
     map.addLayer(markerGroup);
 
+    map.on('click', function(event) {
+        event.stopPropagation();
+        return false;
+    });
+
     map.on('moveend', function(event) {
         var radius;
 
@@ -175,8 +180,10 @@ var updateMapLocationWithUserLoc = function(map) {
 
     function onSuccess(position) {
         $.loc = {
-            lat: position.coords.latitude,
-            lon: position.coords.longitude
+            lat: 47.6605431,
+            lon: -122.3126639
+   //         lat: position.coords.latitude,
+ //           lon: position.coords.longitude
         };
 
         map.setView(new L.LatLng($.loc.lat, $.loc.lon), 17);
