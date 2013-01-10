@@ -1,4 +1,5 @@
 var userStore; // don't want to make this global... todo
+var filterUtils;
 
 $(document).ready(function() {
     var map = initializeMap();
@@ -17,6 +18,10 @@ $(document).ready(function() {
     });
 });
 
+/**
+ *
+ * @param {L.Map} map
+ */
 var fetchPortals = function(map) {
     var portals = []; // todo store this elsewhere
 
@@ -35,14 +40,24 @@ var fetchPortals = function(map) {
 
     $.getJSON("/portals/", function(data){
         $(data).each(function (key, value){
-            portals.push(value);
-            appendPortal(value, map, icons);
+            portals.push(appendPortal(value, map, icons));
         });
     }).done(function() {
-        //allPortalsLoaded(portals, map, icons);
+            filterUtils = new MapFilterUtils();
+            filterUtils.setMarkerDivCollection(portals);
+            filterUtils.setMap(map);
+            filterUtils.setSidebarDiv($("#portals"));
+            filterUtils.addHandlersToFilters();
     });
 };
 
+/**
+ *
+ * @param {Portal} portal
+ * @param {L.Map} map
+ * @param {Object} icons
+ * @return {Object}
+ */
 var appendPortal = function(portal, map, icons) {
     portal.userMap = userStore.users;
 
@@ -52,16 +67,16 @@ var appendPortal = function(portal, map, icons) {
         }).render(portal)
     );
 
-    console.log($portalDiv);
-
     // append to left-side list
     $("#portals").append($portalDiv);
 
     var lat = portal.latitude;
     var lon = portal.longitude;
+
     var marker = new L.Marker(new L.LatLng(lat, lon), {
         icon: icons[portal.team]
     });
+
     map.addLayer(marker);
 
     var popupHtml = new EJS({
@@ -81,18 +96,18 @@ var appendPortal = function(portal, map, icons) {
         );
         marker.openPopup();
     });
+
+    return {
+        marker: marker,
+        div: $portalDiv,
+        portal: portal
+    };
 };
 
-var allPortalsLoaded = function(portals, map) {
-    console.log("Well, all portalps are loaded");
-    portals.forEach(function(portal) {
-        var lat = portal.latitude;
-        var lon = portal.longitude;
-        L.marker(new L.LatLng(lat, lon), {
-        }).addTo(map);
-    });
-};
-
+/**
+ *
+ * @return {L.Map}
+ */
 var initializeMap = function() {
     var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/4bdf8a2626c048129923f7597f80acce/45831/256/{z}/{x}/{y}.png',
         cloudmadeAttribution = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade',
@@ -107,6 +122,10 @@ var initializeMap = function() {
     return map;
 };
 
+/**
+ *
+ * @param {L.Map} map
+ */
 var initializeOrUpdatePanelHeights = function(/*L.Map to invalidate */map) {
     $("#portals").height($(window).height());
     $("#map").height($(window).height());
@@ -114,6 +133,10 @@ var initializeOrUpdatePanelHeights = function(/*L.Map to invalidate */map) {
     map.invalidateSize();
 };
 
+/**
+ *
+ * @param {L.Map} map
+ */
 var updateMapLocationWithUserLoc = function(map) {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(onSuccess, onError);

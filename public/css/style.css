@@ -54,12 +54,11 @@ body {
 
 #filters {
     position: absolute;
-    vertical-align: middle;
+    top: 35%;
     right: 0;
     height: 200px;
     width: 200px;
-    background: rgba(255,255,255, 0.8);
-    display: none;
+    background: rgba(255,255,255, 0.95);
 }
 
 #filters h1 {
