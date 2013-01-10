@@ -2,16 +2,12 @@ var userStore; // don't want to make this global... todo
 var filterUtils;
 var markers = [];
 var markerGroup;
+var lastMapCenter;
 
 $(document).ready(function() {
     var map = initializeMap();
     markerGroup = new L.LayerGroup();
     map.addLayer(markerGroup);
-
-    map.on('click', function(event) {
-        event.stopPropagation();
-        return false;
-    });
 
     map.on('moveend', function(event) {
         var radius;
@@ -22,8 +18,13 @@ $(document).ready(function() {
             // do nothing
         }
 
+
+
         if(radius !== undefined) {
-            fetchPortals(map, radius);
+            if (MapUtils.shouldUpdatePortals(lastMapCenter, radius)) {
+                fetchPortals(map, radius);
+                lastMapCenter = radius;
+            }
         }
     });
 
@@ -145,7 +146,8 @@ var appendPortal = function(portal, map, icons) {
  * @return {L.Map}
  */
 var initializeMap = function() {
-    var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/4bdf8a2626c048129923f7597f80acce/45831/256/{z}/{x}/{y}.png',
+        cloudmadeUrl = 'http://{s}.tile.cloudmade.com/4bdf8a2626c048129923f7597f80acce/45831/256/{z}/{x}/{y}.png',
+        cloudmadeUrl = 'http://map1.craigslist.org/t01/{z}/{x}/{y}.png',
         cloudmadeAttribution = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade',
         cloudmade = new L.TileLayer(cloudmadeUrl, {fadeAnimation: false, zoomAnimation: false, maxZoom: 18, attribution: cloudmadeAttribution});
 
@@ -180,13 +182,14 @@ var updateMapLocationWithUserLoc = function(map) {
 
     function onSuccess(position) {
         $.loc = {
-            lat: 47.6605431,
-            lon: -122.3126639
-   //         lat: position.coords.latitude,
- //           lon: position.coords.longitude
+ //           lat: 47.6605431,
+ //           lon: -122.3126639
+            lat: position.coords.latitude,
+            lon: position.coords.longitude
         };
 
         map.setView(new L.LatLng($.loc.lat, $.loc.lon), 17);
+        lastMapCenter = MapUtils.getLatLonRadiusFromMap(map.getBounds());
     }
 
     function onError() {
@@ -213,5 +216,17 @@ var MapUtils = {
                 (0.5 * (northEast.lng - southWest.lng))
             ))
         };
+    },
+
+    shouldUpdatePortals: function(lastMapBounds, currentMapBounds) {
+        var radius = lastMapBounds.radius;
+
+        if (Math.abs(currentMapBounds.lat - lastMapBounds.lat) < 0.5*radius) {
+            if (Math.abs(currentMapBounds.lon - lastMapBounds.lon) < 0.5*radius) {
+                return false;
+            }
+        }
+
+        return true;
     }
 };
