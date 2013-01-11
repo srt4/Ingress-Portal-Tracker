@@ -64,3 +64,17 @@ body {
 #filters h1 {
     font-size: 12px;
 }
+
+@media only screen and (max-device-width: 640px) {
+   body #portals {
+       display: none;
+   }
+
+   body #filters {
+       display: none;
+   }
+
+   body #map {
+       width: 100%;
+   }
+}
