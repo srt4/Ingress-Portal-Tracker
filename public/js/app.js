@@ -9,6 +9,10 @@ $(document).ready(function() {
     markerGroup = new L.LayerGroup();
     map.addLayer(markerGroup);
 
+    map.on('movestart', function(event){
+        $("#portals").addClass("loading"); // combined this with moveend?
+    });
+
     map.on('moveend', function(event) {
         MapUtils.updatePortalsOnMap(map);
     });
@@ -70,6 +74,7 @@ var fetchPortals = function(map, bounds) {
             markers.push(appendPortal(value, map, icons));
         });
     }).done(function() {
+            $("#portals").removeClass("loading");
             filterUtils = new MapFilterUtils();
             filterUtils.setMarkerDivCollection(markers);
             filterUtils.setMap(map);
@@ -252,11 +257,13 @@ var MapUtils = {
             // do nothing
         }
 
-        if(radius !== undefined) {
-            if (force || MapUtils.shouldUpdatePortals(lastMapCenter, radius)) {
-                fetchPortals(map, radius);
-                lastMapCenter = radius;
-            }
+        if(radius !== undefined
+            &&
+          (force || MapUtils.shouldUpdatePortals(lastMapCenter, radius))) {
+            fetchPortals(map, radius);
+            lastMapCenter = radius;
+        } else {
+            $("#portals").removeClass("loading");
         }
     }
 };

@@ -78,3 +78,7 @@ body {
        width: 100%;
    }
 }
+
+#portals.loading {
+    color: #ccc;
+}
