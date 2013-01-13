@@ -42,6 +42,7 @@ var deleteAllMarkers = function(markerGroup) {
 /**
  *
  * @param {L.Map} map
+ * @param {L.LatLngBounds} bounds
  */
 var fetchPortals = function(map, bounds) {
     var icons = {
@@ -136,7 +137,6 @@ var appendPortal = function(portal, map, icons) {
  */
 var initializeMap = function() {
         cloudmadeUrl = 'http://{s}.tile.cloudmade.com/4bdf8a2626c048129923f7597f80acce/45831/256/{z}/{x}/{y}.png',
-        cloudmadeUrl = 'http://map1.craigslist.org/t01/{z}/{x}/{y}.png',
         cloudmadeAttribution = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade',
         cloudmade = new L.TileLayer(cloudmadeUrl, {fadeAnimation: false, zoomAnimation: false, maxZoom: 18, attribution: cloudmadeAttribution});
 
@@ -151,7 +151,7 @@ var initializeMap = function() {
  *
  * @param {L.Map} map
  */
-var initializeOrUpdatePanelHeights = function(/*L.Map to invalidate */map) {
+var initializeOrUpdatePanelHeights = function(map) {
     $("#portals").height($(window).height());
     $("#map").height($(window).height());
 
@@ -169,10 +169,12 @@ var updateMapLocationWithUserLoc = function(map) {
         onError();
     }
 
+    /**
+     *
+     * @param position
+     */
     function onSuccess(position) {
         $.loc = {
- //           lat: 47.6605431,
- //           lon: -122.3126639
             lat: position.coords.latitude,
             lon: position.coords.longitude
         };
@@ -193,6 +195,11 @@ var updateMapLocationWithUserLoc = function(map) {
 };
 
 var MapUtils = {
+    /**
+     *
+     * @param {L.LatLngBounds} bounds
+     * @return {Object}
+     */
     getLatLonRadiusFromMap: function(bounds) {
         var northEast = bounds.getNorthEast();
         var southWest = bounds.getSouthWest();
@@ -207,6 +214,12 @@ var MapUtils = {
         };
     },
 
+    /**
+     *
+     * @param {Object} lastMapBounds
+     * @param {Object} currentMapBounds
+     * @return {Boolean}
+     */
     shouldUpdatePortals: function(lastMapBounds, currentMapBounds) {
         var radius = lastMapBounds.radius;
 
@@ -219,6 +232,11 @@ var MapUtils = {
         return true;
     },
 
+    /**
+     *
+     * @param {L.Map} map
+     * @param {Boolean} force
+     */
     updatePortalsOnMap: function(map, force) {
         var radius;
 
