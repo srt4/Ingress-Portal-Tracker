@@ -174,26 +174,29 @@ var updateMapLocationWithUserLoc = function(map) {
      * @param position
      */
     function onSuccess(position) {
-        $.loc = {
-            lat: position.coords.latitude,
-            lon: position.coords.longitude
-        };
+        var loc = L.latLng(
+            position.coords.latitude,
+            position.coords.longitude
+        );
 
-        map.setView(new L.LatLng($.loc.lat, $.loc.lon), 17);
-        MapUtils.updatePortalsOnMap(map, true);
-        lastMapCenter = MapUtils.getLatLonRadiusFromMap(map.getBounds());
+        firstRun(loc);
     }
 
     function onError() {
         // U District
-        $.loc = {
-            lat: 47.6605431,
-            lon: -122.3126639
-        };
+        var loc = L.latLng(
+            47.6605431,
+            -122.3126639
+        );
 
-        map.setView(new L.LatLng($.loc.lat, $.loc.lon), 17);
+        firstRun(loc);
+    }
 
+    function firstRun(loc) {
+        map.setView(loc, 17);
         MapUtils.updatePortalsOnMap(map, true);
+        lastMapCenter = MapUtils.getLatLonRadiusFromMap(map.getBounds());
+
     }
 };
 
