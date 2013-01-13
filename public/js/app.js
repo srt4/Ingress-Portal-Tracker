@@ -10,22 +10,11 @@ $(document).ready(function() {
     map.addLayer(markerGroup);
 
     map.on('moveend', function(event) {
-        var radius;
+        MapUtils.updatePortalsOnMap(map);
+    });
 
-        try {
-            radius = MapUtils.getLatLonRadiusFromMap(map.getBounds());
-        } catch(e) {
-            // do nothing
-        }
-
-
-
-        if(radius !== undefined) {
-            if (MapUtils.shouldUpdatePortals(lastMapCenter, radius)) {
-                fetchPortals(map, radius);
-                lastMapCenter = radius;
-            }
-        }
+    map.on('zoomend', function(event){
+        MapUtils.updatePortalsOnMap(map, true);
     });
 
     userStore = new UserStore();
@@ -228,5 +217,22 @@ var MapUtils = {
         }
 
         return true;
+    },
+
+    updatePortalsOnMap: function(map, force) {
+        var radius;
+
+        try {
+            radius = MapUtils.getLatLonRadiusFromMap(map.getBounds());
+        } catch(e) {
+            // do nothing
+        }
+
+        if(radius !== undefined) {
+            if (force || MapUtils.shouldUpdatePortals(lastMapCenter, radius)) {
+                fetchPortals(map, radius);
+                lastMapCenter = radius;
+            }
+        }
     }
 };
