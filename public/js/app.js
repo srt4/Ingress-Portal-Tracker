@@ -20,8 +20,6 @@ $(document).ready(function() {
     userStore = new UserStore();
     userStore.fetchAllusers();
 
-    fetchPortals(map);
-
     window.onload = function(){
         initializeOrUpdatePanelHeights(map)
     };
@@ -45,6 +43,8 @@ var deleteAllMarkers = function(markerGroup) {
  * @param {L.LatLngBounds} bounds
  */
 var fetchPortals = function(map, bounds) {
+    console.log(bounds);
+
     var icons = {
         enlightened: L.icon({
             iconUrl: "/img/enlightened.png",
@@ -180,6 +180,7 @@ var updateMapLocationWithUserLoc = function(map) {
         };
 
         map.setView(new L.LatLng($.loc.lat, $.loc.lon), 17);
+        MapUtils.updatePortalsOnMap(map, true);
         lastMapCenter = MapUtils.getLatLonRadiusFromMap(map.getBounds());
     }
 
@@ -191,6 +192,8 @@ var updateMapLocationWithUserLoc = function(map) {
         };
 
         map.setView(new L.LatLng($.loc.lat, $.loc.lon), 17);
+
+        MapUtils.updatePortalsOnMap(map, true);
     }
 };
 
