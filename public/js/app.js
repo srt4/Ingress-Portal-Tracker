@@ -47,8 +47,6 @@ var deleteAllMarkers = function(markerGroup) {
  * @param {L.LatLngBounds} bounds
  */
 var fetchPortals = function(map, bounds) {
-    console.log(bounds);
-
     var icons = {
         enlightened: L.icon({
             iconUrl: "/img/enlightened.png",
@@ -62,7 +60,7 @@ var fetchPortals = function(map, bounds) {
         })
     };
 
-    var url = "/portals";
+    var url = "/portals/lite";
     if(bounds !== undefined) {
         deleteAllMarkers(markerGroup);
         url += "/" + bounds.lat + "/" + bounds.lon + "/" + bounds.radius;

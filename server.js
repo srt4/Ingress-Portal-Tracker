@@ -2,7 +2,6 @@ var Portal = require("./lib/portal"),
     Mongo = require('./lib/mongo'),
     config = require("./config.json"),
     express = require('express'),
-    Player = require('./lib/player'),
     portals = require('./routes/portals'),
     players = require('./routes/players'),
     path = require('path');
@@ -12,17 +11,20 @@ var app = express();
 app.configure(function () {
     app.use(express.logger('dev'));
     app.use(express.bodyParser());
+    app.engine('.html', require('jade').__express);
     app.use(express.static(path.join(__dirname, 'public')));
 });
 
 // add routes
 app.get('/portals', portals.findAll);
 app.get('/portals/:lat/:lon/:radius', portals.findAllBounded);
+app.get('/portals/lite/:lat/:lon/:radius', portals.liteFindAllBounded);
 app.get('/portals/user/:id', portals.findByUser);
 app.get('/portals/faction/:id', portals.findByFaction);
 app.get('/portals/lvlgt/:id', portals.findByLevelGt);
 app.get('/portals/lvllt/:id', portals.findByLevelLt);
 app.get('/players', players.findAll);
+app.get('/player/:name', players.findPlayer);
 
 
 app.listen(3000);

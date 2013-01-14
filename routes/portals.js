@@ -27,12 +27,49 @@ exports.findByFaction = function(req, res) {
     );
 };
 
+exports.liteFindAllBounded = function(req, res) {
+    var lat = parseFloat(req.params.lat, 10);
+    var lon = parseFloat(req.params.lon, 10);
+    var radius = parseFloat(req.params.radius, 10);
+
+    var filter = {
+        latitude: {
+            $gte: lat - radius,
+            $lte: lat + radius
+        },
+        longitude: {
+            $gte: lon - radius,
+            $lte: lon + radius
+        }
+    };
+
+    var projection = {
+        latitude: 1,
+        longitude: 1,
+        team: 1,
+        capturingPlayerId: 1,
+        address: 1,
+        name: 1
+    };
+
+    Mongo.getDb().collection('portals', function(err, collection){
+        collection.find(
+            filter,
+            projection
+        ).toArray(function(err, items){
+            res.send(items);
+        });
+    })
+};
+
+
+
 exports.findAllBounded = function(req, res) {
     var lat = parseFloat(req.params.lat, 10);
     var lon = parseFloat(req.params.lon, 10);
     var radius = parseFloat(req.params.radius, 10);
 
-    var filter =             {
+    var filter = {
         latitude: {
             $gte: lat - radius,
             $lte: lat + radius
@@ -46,18 +83,7 @@ exports.findAllBounded = function(req, res) {
     console.log(JSON.stringify(filter));
 
     Mongo.getDb().collection('portals', function(err, collection) {
-        collection.find(
-            {
-                latitude: {
-                    $gte: lat - radius,
-                    $lte: lat + radius
-                },
-                longitude: {
-                    $gte: lon - radius,
-                    $lte: lon + radius
-                }
-            }
-        ).toArray(function(err, items){
+        collection.find(filter).toArray(function(err, items){
                 res.send(items);
         });
     });
