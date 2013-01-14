@@ -60,7 +60,7 @@ var fetchPortals = function(map, bounds) {
         })
     };
 
-    var url = "/portals/lite";
+    var url = "/portals";
     if(bounds !== undefined) {
         deleteAllMarkers(markerGroup);
         url += "/" + bounds.lat + "/" + bounds.lon + "/" + bounds.radius;

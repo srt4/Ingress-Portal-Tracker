@@ -2,3 +2,7 @@ h1=name
 h1 Portals
 each portal in items
     li=portal.name
+        each resonator in portal.resonators
+            ul
+                li=resonator.level
+                li=resonator.energyTotal
