@@ -1,8 +1,38 @@
-h1=name
-h1 Portals
-each portal in items
-    li=portal.name
-        each resonator in portal.resonators
-            ul(style="display:none")
-                li=resonator.level
-                li=resonator.energyTotal
+head
+    link(rel="stylesheet", href="http://cdn.leafletjs.com/leaflet-0.4.5/leaflet.css")
+    script(src="http://cdn.leafletjs.com/leaflet-0.4/leaflet.js")
+    script(src="/js/jquery-1.8.2.js")
+    script(type='text/javascript')
+        $(document).ready(function(){
+        var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/4bdf8a2626c048129923f7597f80acce/45831/256/{z}/{x}/{y}.png',
+            cloudmadeAttribution = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade',
+            cloudmade = new L.TileLayer(cloudmadeUrl, {fadeAnimation: false, zoomAnimation: false, maxZoom: 18, attribution: cloudmadeAttribution});
+        var map = new L.Map('map');
+        map.addLayer(cloudmade);
+        L.marker([51.5, -0.09]).addTo(map)
+            .bindPopup('A pretty CSS3 popup. <br> Easily customizable.').openPopup();
+        map.setView([47.7, -122.2], 10);
+
+        $("#portals li").each(function(key, value) {
+            console.log(value);
+            var lat = $(value).attr("data-latitude");
+            var lon = $(value).attr("data-longitude");
+            if(lat !== undefined) L.marker([lat, lon]).addTo(map);
+        });
+        });
+
+body
+    h1=name
+    h1 Portals
+    ul#portals(style="float:left")
+        each portal in items
+            li(
+                data-latitude="#{portal.latitude}",
+                data-longitude="#{portal.longitude}"
+            )=portal.name
+                each resonator in portal.resonators
+                    ul(style="display:none")
+                        li=resonator.level
+                        li=resonator.energyTotal
+
+    div#map(style="width:500px;height:500px;float:left")
