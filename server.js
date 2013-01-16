@@ -16,6 +16,7 @@ app.configure(function () {
 });
 
 // add routes
+app.post('/portals/filter', portals.findWithFilter);
 app.get('/portals', portals.findAll);
 app.get('/portals/:lat/:lon/:radius', portals.findAllBounded);
 app.get('/portals/lite/:lat/:lon/:radius', portals.liteFindAllBounded);

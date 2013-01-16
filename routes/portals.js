@@ -62,7 +62,15 @@ exports.liteFindAllBounded = function(req, res) {
     })
 };
 
+exports.findWithFilter = function(req, res) {
+    var filter = req.param('filter', null);
 
+    Mongo.getDb().collection('portals', function(err, collection){
+        collection.find(filter).toArray(function(err, items){
+            res.send(items);
+        });
+    });
+};
 
 exports.findAllBounded = function(req, res) {
     var lat = parseFloat(req.params.lat, 10);
@@ -80,8 +88,6 @@ exports.findAllBounded = function(req, res) {
         }
     };
 
-    console.log(JSON.stringify(filter));
-
     Mongo.getDb().collection('portals', function(err, collection) {
         collection.find(filter).toArray(function(err, items){
                 res.send(items);
@@ -92,6 +98,20 @@ exports.findAllBounded = function(req, res) {
 exports.findByLevelGt = function(req, res) {
     //todo
     var levelGt = req.params.id;
+
+    var filter = {
+        "resonators.level": {
+            $not: {
+                "$gte": levelGt
+            }
+        }
+    };
+
+    Mongo.getDb().collection('portals', function(err, collection){
+        collection.find(filter).toArray(function(err, items){
+            res.send(items);
+        });
+    });
 };
 
 exports.findByLevelLt = function(req, res) {
