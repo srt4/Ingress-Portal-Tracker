@@ -1,11 +1,17 @@
 var userStore; // don't want to make this global... todo
 var filterUtils;
+var filters = {};
 var markers = [];
 var markerGroup;
 var lastMapCenter;
 
 $(document).ready(function() {
     var map = initializeMap();
+
+    MapUtils.setMap(map);
+
+    initializeSlider();
+
     markerGroup = new L.LayerGroup();
     map.addLayer(markerGroup);
 
@@ -35,6 +41,34 @@ $(document).ready(function() {
 
 /**
  *
+ */
+var initializeSlider = function() {
+    $("#slider-range").slider({
+        range: true,
+        min: 1,
+        max: 8,
+        values: [1, 8],
+        slide: function(event, ui) {
+            $("#level").val(ui.values[0] + " - " + ui.values[1]);
+
+            filters["resonators.level"] = {
+                $not: {
+                    $gt: ui.values[1],
+                    $lt: ui.values[0]
+                }
+            };
+
+            MapUtils.updatePortalsOnMap(null, true);
+        }
+    }).css("width", "80%");
+    $("#level").val(
+        $("#slider-range").slider("values", 0) + " - " +
+        $("#slider-range").slider("values", 1)
+    );
+};
+
+/**
+ *
  * @param {L.LayerGroup} markerGroup
  */
 var deleteAllMarkers = function(markerGroup) {
@@ -60,14 +94,14 @@ var fetchPortals = function(map, bounds) {
         })
     };
 
-    var url = "/portals";
+    var url = "/portals/filter";
     if(bounds !== undefined) {
         deleteAllMarkers(markerGroup);
-        url += "/" + bounds.lat + "/" + bounds.lon + "/" + bounds.radius;
     }
 
-    $.getJSON(url, function(data){
+    $.post(url, {filter: filters}, function(data){
         $("#portals").empty();
+
         $(data).each(function (key, value){
             markers.push(appendPortal(value, map, icons));
         });
@@ -204,6 +238,12 @@ var updateMapLocationWithUserLoc = function(map) {
 };
 
 var MapUtils = {
+    map: null,
+
+    setMap: function(map) {
+        this.map = map;
+    },
+
     /**
      *
      * @param {L.LatLngBounds} bounds
@@ -247,6 +287,10 @@ var MapUtils = {
      * @param {Boolean} force
      */
     updatePortalsOnMap: function(map, force) {
+        if (map == null) {
+            map = this.map;
+        }
+
         var radius;
 
         try {
@@ -258,7 +302,18 @@ var MapUtils = {
         if(radius !== undefined
             &&
           (force || MapUtils.shouldUpdatePortals(lastMapCenter, radius))) {
-            fetchPortals(map, radius);
+            filters["latitude"] = {
+                $gte: parseFloat(radius.lat - radius.radius),
+                $lte: radius.lat + radius.radius
+            };
+
+            filters["longitude"] = {
+                $gte: radius.lon - radius.radius,
+                $lte: radius.lon + radius.radius
+            };
+
+            fetchPortals(null, true);
+
             lastMapCenter = radius;
         } else {
             $("#portals").removeClass("loading");

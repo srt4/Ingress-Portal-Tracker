@@ -62,8 +62,31 @@ exports.liteFindAllBounded = function(req, res) {
     })
 };
 
+/**
+ *
+ * @param {Object} filter
+ */
+var parseRecursively = function(filter) {
+    for (var property in filter) {
+        console.log(filter);
+        if(filter.hasOwnProperty(property)) {
+            var o = filter[property];
+
+            if (typeof o === "object") {
+                parseRecursively(o);
+            } else if (typeof o === "string") {
+                filter[property] = parseFloat(o);
+            }
+        }
+    }
+};
+
 exports.findWithFilter = function(req, res) {
     var filter = req.param('filter', null);
+
+    parseRecursively(filter);
+
+    console.log(filter);
 
     Mongo.getDb().collection('portals', function(err, collection){
         collection.find(filter).toArray(function(err, items){

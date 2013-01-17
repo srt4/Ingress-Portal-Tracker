@@ -4,8 +4,10 @@
     <title></title>
     <link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4.5/leaflet.css" />
     <script src="js/jquery-1.8.2.js" type="text/javascript"></script>
+    <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js" type="text/javascript"></script>
     <script src="js/userstore.js" type="text/javascript"></script>
     <script src="js/mapFilterUtils.js" type="text/javascript"></script>
     <script type="text/javascript" src="js/ejs/ejs_production.js"></script>
@@ -20,40 +22,6 @@
     <div id="map">
     </div>
     <div id="filters">
-        <!--
-        <div id="level-filters">
-            <h1>Filter by Level</h1>
-            <form id="level-filter">
-                <label>
-                    Minimum
-                    <select id="level-min">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                        <option>6</option>
-                        <option>7</option>
-                        <option>8</option>
-                    </select>
-                </label>
-                <br />
-                <label>
-                    Maximum
-                    <select id="level-max">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                        <option>6</option>
-                        <option>7</option>
-                        <option>8</option>
-                    </select>
-                </label>
-            </form>
-        </div>
--->
         <div id="faction-filters">
             <h1>Filter by Faction</h1>
             <form id="faction-filter">
@@ -68,13 +36,11 @@
                 </label>
             </form>
         </div>
-<!--
-        <form id="search-filter">
-            <label for="search-filters">
-                <input type="text" id="search-filters" />
-            </label>
-        </form>
-        -->
+        <div id="search-filter">
+            <label for="level">Level range:</label>
+            <input type="text" id="level" style="border: 0; color: #f6931f; font-weight: bold;" />
+            <div id="slider-range"></div>
+        </div>
     </div>
 </body>
 </html>
