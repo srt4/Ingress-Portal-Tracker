@@ -1,5 +1,6 @@
 var Mongo = require('./lib/mongo'),
-    config = require("./config.json");
+    config = require("./config.json"),
+    Player = require('./lib/player');
 
 Array.prototype.unique = function() {
     var o = {}, i, l = this.length, r = [];
@@ -44,11 +45,13 @@ var findAllUserGuids = function() {
                     var uniqueGuids = guids.unique();
                     var notFoundGuids = [];
                     var i = 0;
+                    var j = 0;
                     uniqueGuids.forEach(function(guid){
                         Mongo.getDb().collection("players", function(err, collection){
                             collection.find({guid: guid}
                             ).toArray(function(err, items){
                                     var notFound = true;
+                                    j++;
 
                                     items.forEach(function(player){
                                         console.log(player);
@@ -56,12 +59,26 @@ var findAllUserGuids = function() {
                                         i++;
                                     });
 
-                                    if (notFound) {
+                                    if (notFound && guid !== undefined) {
                                         notFoundGuids.push(guid);
                                     }
 
                                     console.log("DONE >> " + i + " / " + uniqueGuids.length);
                                     console.log(notFoundGuids);
+
+                                    if(j == uniqueGuids.length){
+                                        console.log("PROCESSED ALL");
+                                        (function(){
+                                            Player.fetchAll(
+                                                uniqueGuids,
+                                                function(data) {
+                                                    data.forEach(function(player) {
+                                                        Mongo.savePlayer(player);
+                                                    })
+                                                }
+                                            );
+                                        })();
+                                    }
                             })
                         });
                     });
