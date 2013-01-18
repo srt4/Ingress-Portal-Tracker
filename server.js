@@ -275,7 +275,7 @@ function(data) {
    })
 });*/
 
-//getPortals();
+getPortals();
 
 //Mongo.getAllPortals();
 

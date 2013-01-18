@@ -67,6 +67,27 @@ var initializeSlider = function() {
     );
 };
 
+var filterByFactionListener = function() {
+    var $factionFilterForm = $("#faction-filter");
+    $factionFilterForm.on("click", function(e){
+        var checked = [];
+        $("#faction-filter").find("input:checked").each(function(key, value){
+            checked.push($(value).val());
+        });
+
+        if(checked.length == 0 || checked.length == 2){
+            checked = [];
+            filters["faction"] = null;
+        } else {
+            filters["faction"] = checked[1];
+        }
+
+        MapUtils.updatePortalsOnMap(null, true);
+    });
+};
+
+
+
 /**
  *
  * @param {L.LayerGroup} markerGroup
