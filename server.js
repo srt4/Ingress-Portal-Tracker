@@ -34,6 +34,7 @@ app.get('/portals/faction/:id', portals.findByFaction);
 app.get('/portals/lvlgt/:id', portals.findByLevelGt);
 app.get('/portals/lvllt/:id', portals.findByLevelLt);
 app.get('/player', players.findAllPlayers);
+app.get('/players', players.findAll); // TODO merge with /player route
 app.get('/player/:name', players.findPlayer);
 
 
