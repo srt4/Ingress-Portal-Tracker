@@ -2,14 +2,23 @@ var Portal = require("./lib/portal"),
     Mongo = require('./lib/mongo'),
     config = require("./config.json"),
     express = require('express'),
+    fs = require('fs'),
     portals = require('./routes/portals'),
     players = require('./routes/players'),
     path = require('path');
 
 var app = express();
 
+var logFile = fs.createWriteStream('./access.log', {
+    flags: 'a'
+});
+
+
 app.configure(function () {
-    app.use(express.logger('dev'));
+    app.use(express.logger({stream: logFile}));
+    if(config.debug) {
+        app.use(express.logger('dev'));
+    }
     app.use(express.bodyParser());
     app.engine('.html', require('jade').__express);
     app.use(express.static(path.join(__dirname, 'public')));
@@ -24,7 +33,7 @@ app.get('/portals/user/:id', portals.findByUser);
 app.get('/portals/faction/:id', portals.findByFaction);
 app.get('/portals/lvlgt/:id', portals.findByLevelGt);
 app.get('/portals/lvllt/:id', portals.findByLevelLt);
-app.get('/players', players.findAll);
+app.get('/player', players.findAllPlayers);
 app.get('/player/:name', players.findPlayer);
 
 
@@ -275,7 +284,7 @@ function(data) {
    })
 });*/
 
-getPortals();
+//getPortals();
 
 //Mongo.getAllPortals();
 

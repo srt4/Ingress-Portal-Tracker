@@ -47,3 +47,15 @@ exports.findPlayer = function(req, res) {
         });
     });
 };
+
+exports.findAllPlayers = function(req, res) {
+    var db = Mongo.getDb();
+
+    db.collection('players', function(err, collection){
+        collection.find().toArray(function(err, items){
+            res.render('../views/players.jade', {
+                items: items
+            });
+        });
+    });
+};
