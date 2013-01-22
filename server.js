@@ -55,42 +55,6 @@ function getPortals() {
 	Portal.fetchAll(null, null, function(portals){
 		portals.forEach(function(portal){
 			foundPortals[portal.getId()] = portal;
-
-			if(config.debug && false) {
-				console.log("ID: " + portal.getId());
-				console.log("NAME: " + portal.getName());
-				console.log("ADDRESS: " + portal.getAddress());
-			}
-
-            var teamColor;
-			switch(portal.getTeam()) {
-				case "enlightened":
-					teamColor = "green_bg";
-					break;
-				case "resistance":
-					teamColor = "blue_bg";
-					break;
-				default:
-					teamColor = "white_bg";
-					break;
-			}
-            console.log(portal.latitude);
-
-			if (config.debug && false) {
-				console.log("TEAM: " + portal.getTeam());
-				console.log("MODS: ");
-
-				portal.getMods().forEach(function(mod){
-					console.log(" - Name: " + mod.getName() + ", Rarity: " + mod.getRarity());
-				});
-
-				console.log("RESONATORS: ");
-				portal.getResonators().forEach(function(resonator){
-					console.log(" - Level: " + resonator.getLevel() + ", Energy: " + resonator.getEnergyTotal() + " (" + resonator.getEnergyPercentage() + "%)");
-				});
-
-				console.log("\n-----------------------------------------------------------------------------------\n");
-			}
 		});
         Mongo.populateDb(foundPortals);
     });
