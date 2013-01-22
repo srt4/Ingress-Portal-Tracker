@@ -54,7 +54,7 @@ function getPortals() {
 		portals.forEach(function(portal){
 			foundPortals[portal.getId()] = portal;
 		});
-        Mongo.populateDb(foundPortals);
+        Mongo.addPortals(foundPortals);
     });
 }
 

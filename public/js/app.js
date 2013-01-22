@@ -13,6 +13,7 @@ $(document).ready(function() {
     initializeSlider();
 
     markerGroup = new L.LayerGroup();
+
     map.addLayer(markerGroup);
 
     map.on('movestart', function(event){
