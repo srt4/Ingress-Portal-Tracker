@@ -4,6 +4,7 @@ var Portal = require("./lib/portal"),
     express = require('express'),
     fs = require('fs'),
     portals = require('./routes/portals'),
+    receiver = require('./lib/receiver'),
     players = require('./routes/players'),
     path = require('path');
 
@@ -25,6 +26,7 @@ app.configure(function () {
 });
 
 // add routes
+app.post('/data/add', receiver.acceptPayload)
 app.post('/portals/filter', portals.findWithFilter);
 app.get('/portals', portals.findAll);
 app.get('/portals/:lat/:lon/:radius', portals.findAllBounded);
