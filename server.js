@@ -40,27 +40,23 @@ app.get('/players', players.findAll); // TODO merge with /player route
 app.get('/player/:name', players.findPlayer);
 
 
-app.listen(3000);
+app.listen(config.server.port);
 console.log('Listening on port 3000...');
-
-var foundPortals = {};
 
 function getPortals() {
 	if(config.debug) {
 		console.log("Fetching portals...");
 	}
 
-    console.log(Mongo);
+    var foundPortals = {};
 
-	Portal.fetchAll(null, null, function(portals){
+    Portal.fetchAll(null, null, function(portals){
 		portals.forEach(function(portal){
 			foundPortals[portal.getId()] = portal;
 		});
         Mongo.populateDb(foundPortals);
     });
-
 }
-
 
 if (config.fetchOnStart){
     getPortals();
